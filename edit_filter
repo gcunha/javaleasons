@@ -1,0 +1,39 @@
+import requests
+from requests.auth import HTTPBasicAuth
+import json
+
+# Jira API credentials and filter details
+JIRA_DOMAIN = 'https://gcunha-atl.atlassian.net'   # Replace with your Jira domain
+API_TOKEN = '=-GKmEmMDGXQRHO2hAPg0oJLCWE0hZ0VleQNzpAQfssOU7f7tUswo5WonfOQ--FJzHTDs=621087CC'                       # Replace with your API token
+EMAIL = '.com'                     # Replace with your Jira email
+FILTER_ID = '10117'                                # Replace with the filter ID
+
+# New permission details (for project-based permission)
+NEW_PERMISSION = {
+    "type": "project",
+    "projectId": "10212"
+}
+
+# Jira API endpoint for adding filter permissions
+url = f"{JIRA_DOMAIN}/rest/api/3/filter/{FILTER_ID}/permission"
+
+# HTTP headers for authentication and content type
+headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json"
+}
+
+# Make the POST request to add the permission
+response = requests.post(
+    url,
+    data=json.dumps(NEW_PERMISSION),
+    headers=headers,
+    auth=HTTPBasicAuth(EMAIL, API_TOKEN)
+)
+
+# Print the response (success or error message)
+if response.status_code == 200:
+    print("Permission added successfully!")
+else:
+    print(f"Failed to add permission: {response.status_code}")
+    print(response.text)
